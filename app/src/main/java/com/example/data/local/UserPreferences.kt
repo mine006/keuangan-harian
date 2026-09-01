@@ -16,8 +16,9 @@ data class BudgetConfig(
 )
 
 data class UserProfile(
-    val name: String = "Pengguna",
-    val email: String = "pengguna@example.com",
+    val name: String = "",
+    val email: String = "",
+    val isRegistered: Boolean = false,
     val isGoogleLinked: Boolean = false,
     val avatarColorIndex: Int = 0
 )
@@ -47,9 +48,11 @@ class UserPreferences(context: Context) {
     }
 
     private fun loadUserProfile(): UserProfile {
+        val isRegistered = prefs.getBoolean("user_is_registered", false)
         return UserProfile(
-            name = prefs.getString("user_name", "Budi Santoso") ?: "Budi Santoso",
-            email = prefs.getString("user_email", "budi.santoso@gmail.com") ?: "budi.santoso@gmail.com",
+            name = prefs.getString("user_name", "") ?: "",
+            email = prefs.getString("user_email", "") ?: "",
+            isRegistered = isRegistered,
             isGoogleLinked = prefs.getBoolean("user_google_linked", false),
             avatarColorIndex = prefs.getInt("user_avatar_index", 0)
         )
@@ -68,6 +71,7 @@ class UserPreferences(context: Context) {
 
     fun saveUserProfile(profile: UserProfile) {
         prefs.edit()
+            .putBoolean("user_is_registered", profile.isRegistered)
             .putString("user_name", profile.name)
             .putString("user_email", profile.email)
             .putBoolean("user_google_linked", profile.isGoogleLinked)

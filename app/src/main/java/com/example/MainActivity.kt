@@ -68,6 +68,7 @@ import com.example.ui.components.BudgetConfigDialog
 import com.example.ui.components.HeaderBar
 import com.example.ui.components.MonthlyChartsView
 import com.example.ui.components.ProfileDialog
+import com.example.ui.components.RegisterScreen
 import com.example.ui.components.TransactionsListView
 import com.example.ui.theme.AlertRed
 import com.example.ui.theme.CyanAccent
@@ -106,6 +107,15 @@ fun FinanceApp(viewModel: FinanceViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+
+    if (!uiState.userProfile.isRegistered) {
+        RegisterScreen(
+            onRegister = { name, email ->
+                viewModel.registerUser(name, email)
+            }
+        )
+        return
+    }
 
     // Request POST_NOTIFICATIONS permission for Android 13+
     val permissionLauncher = rememberLauncherForActivityResult(

@@ -123,17 +123,30 @@ class FinanceViewModel(application: Application) : AndroidViewModel(application)
         val userPrefs = UserPreferences(application)
         repository = FinanceRepository(db.transactionDao(), userPrefs)
 
-        viewModelScope.launch {
-            repository.allTransactions.collect { list ->
-                if (list.isEmpty()) {
-                    repository.seedInitialDataIfEmpty()
-                }
+        // Clear existing transactions if user is not registered or fresh start
+        if (!repository.userProfile.value.isRegistered) {
+            viewModelScope.launch {
+                repository.clearAllTransactions()
             }
         }
 
         // Schedule weekly notification if enabled
         if (repository.budgetConfig.value.isEnabled && repository.budgetConfig.value.notifyWeekly) {
             NotificationHelper.scheduleWeeklyReminder(application)
+        }
+    }
+
+    fun registerUser(name: String, email: String) {
+        viewModelScope.launch {
+            repository.clearAllTransactions()
+            val current = repository.userProfile.value
+            repository.saveUserProfile(
+                current.copy(
+                    name = name.trim(),
+                    email = email.trim(),
+                    isRegistered = true
+                )
+            )
         }
     }
 
