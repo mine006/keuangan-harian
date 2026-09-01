@@ -1,0 +1,6 @@
+{
+  "name": "Keuangan",
+  "description": "Aplikasi keuangan pencatat pengeluaran & pemasukan harian, grafik statistik bulanan, batas anggaran, dan notifikasi pengingat. Copyright by Minz.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
